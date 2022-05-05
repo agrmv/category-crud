@@ -1,0 +1,110 @@
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsBoolean,
+  Max,
+  Min,
+  IsInt,
+} from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
+
+export class QueryParams {
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'Filter categories by slug',
+    example: 'Books',
+    required: false,
+  })
+  readonly slug?: string;
+
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'Filter categories by name',
+    example: 'Scientific literature',
+    required: false,
+  })
+  readonly name?: string;
+
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'Filter categories by description',
+    example: 'Popular science books',
+    required: false,
+  })
+  readonly description?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  @Transform(({ value }) =>
+    [0, 1, true, false, '0', '1', 'true', 'false'].includes(value)
+      ? !!JSON.parse(value)
+      : '',
+  )
+  @ApiProperty({
+    description: 'Filter categories by state',
+    enum: [true, false, 1, 0],
+    required: false,
+  })
+  readonly active?: boolean;
+
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'Filter categories by name or description',
+    example: 'Popular science books',
+    required: false,
+  })
+  readonly search?: string;
+
+  @IsInt()
+  @Min(1)
+  @Max(9)
+  @IsOptional()
+  @IsNotEmpty()
+  @Type(() => Number)
+  @ApiProperty()
+  @ApiProperty({
+    description: 'Number of categories per page',
+    example: 3,
+    default: 2,
+    required: false,
+  })
+  readonly pageSize?: number;
+
+  @IsInt()
+  @Min(0)
+  @IsOptional()
+  @IsNotEmpty()
+  @Type(() => Number)
+  @ApiProperty({
+    description: 'Page number',
+    required: false,
+  })
+  readonly page?: number;
+
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  @Transform(({ value }) =>
+    ['id', 'slug', 'name', 'description', 'createdDate', 'active'].includes(
+      value.startsWith('-') ? value.slice(1) : value,
+    )
+      ? value
+      : '-createdDate',
+  )
+  @ApiProperty({
+    description: 'Category sorting parameter.',
+    required: false,
+    enum: ['id', 'slug', 'name', 'description', 'createdDate', 'active'],
+  })
+  readonly sort?: string;
+}
