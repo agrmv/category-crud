@@ -21,7 +21,6 @@ export class CategoryService {
   }
 
   private static getFilterProperties(params: {
-    id?: string;
     slug?: string;
     name?: string;
     description?: string;
@@ -32,19 +31,16 @@ export class CategoryService {
     sort?: string;
   }): FilterQuery<CategoryDocument> {
     const filter = [];
-    if (params.id?.trim().length > 0) {
-      filter.push({ _id: params.id });
-    }
 
-    if (params.slug?.trim().length > 0) {
+    if (params.slug?.length > 0) {
       filter.push({ slug: params.slug });
     }
 
-    if (!params.search && params.name?.trim().length > 0) {
+    if (!params.search && params.name?.length > 0) {
       filter.push({ name: { $regex: new RegExp(params.name, 'i') } });
     }
 
-    if (!params.search && params.description?.trim().length > 0) {
+    if (!params.search && params.description?.length > 0) {
       filter.push({
         description: { $regex: new RegExp(params.description, 'i') },
       });
@@ -94,7 +90,6 @@ export class CategoryService {
   }
 
   async getAll(params: {
-    id?: string;
     slug?: string;
     name?: string;
     description?: string;

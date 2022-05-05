@@ -1,5 +1,4 @@
 import {
-  IsNotEmpty,
   IsOptional,
   IsString,
   IsBoolean,
@@ -13,7 +12,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class QueryParams {
   @IsString()
   @IsOptional()
-  @IsNotEmpty()
+  @Transform(({ value }) => value.trim())
   @ApiProperty({
     description: 'Filter categories by slug',
     example: 'Books',
@@ -23,7 +22,7 @@ export class QueryParams {
 
   @IsString()
   @IsOptional()
-  @IsNotEmpty()
+  @Transform(({ value }) => value.trim())
   @ApiProperty({
     description: 'Filter categories by name',
     example: 'Scientific literature',
@@ -33,7 +32,7 @@ export class QueryParams {
 
   @IsString()
   @IsOptional()
-  @IsNotEmpty()
+  @Transform(({ value }) => value.trim())
   @ApiProperty({
     description: 'Filter categories by description',
     example: 'Popular science books',
@@ -57,7 +56,7 @@ export class QueryParams {
 
   @IsString()
   @IsOptional()
-  @IsNotEmpty()
+  @Transform(({ value }) => value.trim())
   @ApiProperty({
     description: 'Filter categories by name or description',
     example: 'Popular science books',
@@ -69,7 +68,6 @@ export class QueryParams {
   @Min(1)
   @Max(9)
   @IsOptional()
-  @IsNotEmpty()
   @Type(() => Number)
   @ApiProperty()
   @ApiProperty({
@@ -83,7 +81,6 @@ export class QueryParams {
   @IsInt()
   @Min(0)
   @IsOptional()
-  @IsNotEmpty()
   @Type(() => Number)
   @ApiProperty({
     description: 'Page number',
@@ -93,12 +90,11 @@ export class QueryParams {
 
   @IsString()
   @IsOptional()
-  @IsNotEmpty()
   @Transform(({ value }) =>
     ['id', 'slug', 'name', 'description', 'createdDate', 'active'].includes(
       value.startsWith('-') ? value.slice(1) : value,
     )
-      ? value
+      ? value.trim()
       : '-createdDate',
   )
   @ApiProperty({
