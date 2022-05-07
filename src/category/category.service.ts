@@ -32,26 +32,26 @@ export class CategoryService {
   }): FilterQuery<CategoryDocument> {
     const filter = [];
 
-    if (params.slug?.length > 0) {
+    if (params.slug) {
       filter.push({ slug: params.slug });
     }
 
-    if (!params.search && params.name?.length > 0) {
-      filter.push({ name: { $regex: new RegExp(params.name, 'i') } });
+    if (!params.search && params.name) {
+      filter.push({ name: { $regex: `.*${params.name}.*`, $options: 'i' } });
     }
 
-    if (!params.search && params.description?.length > 0) {
+    if (!params.search && params.description) {
       filter.push({
-        description: { $regex: new RegExp(params.description, 'i') },
+        description: { $regex: `.*${params.description}.*`, $options: 'i' },
       });
     }
 
-    if (params.search?.trim().length > 0) {
+    if (params.search) {
       filter.push({
         $or: [
-          { name: { $regex: new RegExp(params.search, 'i') } },
+          { name: { $regex: `.*${params.search}.*`, $options: 'i' } },
           {
-            description: { $regex: new RegExp(params.search, 'i') },
+            description: { $regex: `.*${params.search}.*`, $options: 'i' },
           },
         ],
       });
@@ -100,6 +100,7 @@ export class CategoryService {
   }): Promise<CategoryDocument[]> {
     return this.categoryModel
       .find(CategoryService.getFilterProperties(params))
+      .collation({ locale: 'ru', strength: 1 })
       .limit(params.pageSize || CategoryService.defaultPageSize)
       .skip(CategoryService.isFirstPage(params.page) ? 0 : params.page)
       .sort(params.sort || CategoryService.defaultSort)
