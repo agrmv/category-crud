@@ -12,7 +12,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class QueryParams {
   @IsString()
   @IsOptional()
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => value?.trim())
   @ApiProperty({
     description: 'Filter categories by slug',
     example: 'Books',
@@ -22,7 +22,7 @@ export class QueryParams {
 
   @IsString()
   @IsOptional()
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => value?.trim())
   @ApiProperty({
     description: 'Filter categories by name',
     example: 'Scientific literature',
@@ -32,7 +32,7 @@ export class QueryParams {
 
   @IsString()
   @IsOptional()
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => value?.trim())
   @ApiProperty({
     description: 'Filter categories by description',
     example: 'Popular science books',
@@ -56,7 +56,7 @@ export class QueryParams {
 
   @IsString()
   @IsOptional()
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => value?.trim())
   @ApiProperty({
     description: 'Filter categories by name or description',
     example: 'Popular science books',
@@ -94,7 +94,7 @@ export class QueryParams {
     ['id', 'slug', 'name', 'description', 'createdDate', 'active'].includes(
       value.startsWith('-') ? value.slice(1) : value,
     )
-      ? value.trim()
+      ? value?.trim()
       : '-createdDate',
   )
   @ApiProperty({

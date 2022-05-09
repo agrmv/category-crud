@@ -9,7 +9,7 @@ export class CreateCategoryDto {
     description: 'Unique category name',
     example: 'Books',
   })
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => value?.trim())
   readonly slug: string;
 
   @IsString()
@@ -18,7 +18,7 @@ export class CreateCategoryDto {
     description: 'Category name',
     example: 'Scientific literature',
   })
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => value?.trim())
   readonly name: string;
 
   @IsString()
@@ -28,7 +28,7 @@ export class CreateCategoryDto {
     description: 'Category description',
     example: 'Popular science books',
   })
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => value?.trim())
   readonly description?: string;
 
   @IsBoolean()
