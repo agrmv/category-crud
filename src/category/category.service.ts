@@ -21,7 +21,6 @@ export class CategoryService {
   }
 
   private static getFilterProperties(params: {
-    slug?: string;
     name?: string;
     description?: string;
     search?: string;
@@ -31,10 +30,6 @@ export class CategoryService {
     sort?: string;
   }): FilterQuery<CategoryDocument> {
     const filter = { $and: [] };
-
-    if (params.slug) {
-      filter['$and'].push({ slug: params.slug });
-    }
 
     if (!params.search && params.name) {
       filter['$and'].push({
@@ -119,7 +114,6 @@ export class CategoryService {
   }
 
   async getAll(params: {
-    slug?: string;
     name?: string;
     description?: string;
     active?: boolean;
