@@ -1,4 +1,10 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsAlphanumeric,
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -9,6 +15,7 @@ export class CreateCategoryDto {
     description: 'Unique category name',
     example: 'Books',
   })
+  @IsAlphanumeric('en-US')
   @Transform(({ value }) => value?.trim())
   readonly slug: string;
 

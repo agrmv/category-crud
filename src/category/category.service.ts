@@ -37,21 +37,44 @@ export class CategoryService {
     }
 
     if (!params.search && params.name) {
-      filter.push({ name: { $regex: `.*${params.name}.*`, $options: 'i' } });
+      filter.push({
+        $or: [
+          { name: params.name },
+          { name: { $regex: `.*${params.name}.*`, $options: 'i' } },
+        ],
+      });
     }
 
     if (!params.search && params.description) {
       filter.push({
-        description: { $regex: `.*${params.description}.*`, $options: 'i' },
+        $or: [
+          { description: params.description },
+          {
+            description: { $regex: `.*${params.description}.*`, $options: 'i' },
+          },
+        ],
       });
     }
 
     if (params.search) {
       filter.push({
         $or: [
-          { name: { $regex: `.*${params.search}.*`, $options: 'i' } },
           {
-            description: { $regex: `.*${params.search}.*`, $options: 'i' },
+            $or: [
+              { name: params.search },
+              { name: { $regex: `.*${params.search}.*`, $options: 'i' } },
+            ],
+          },
+          {
+            $or: [
+              { description: params.search },
+              {
+                description: {
+                  $regex: `.*${params.search}.*`,
+                  $options: 'i',
+                },
+              },
+            ],
           },
         ],
       });
