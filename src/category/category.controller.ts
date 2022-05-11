@@ -15,6 +15,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { PatchCategoryDto } from './dto/patch-category.dto';
 import { Category } from './category.schema';
 import { FindOneParams } from './utils/find-one-params';
+import { IdParam } from './utils/id-param';
 import { QueryParams } from './utils/query-params';
 import { ApiResponse } from '@nestjs/swagger';
 
@@ -22,7 +23,7 @@ import { ApiResponse } from '@nestjs/swagger';
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
-  @Get(':id')
+  @Get(':identifier')
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Success response.',
@@ -36,8 +37,8 @@ export class CategoryController {
     status: HttpStatus.NOT_FOUND,
     description: 'Not Found.',
   })
-  findOneById(@Param() { id }: FindOneParams): Promise<Category> {
-    return this.categoryService.findOneById(id);
+  findOne(@Param() { identifier }: FindOneParams): Promise<Category> {
+    return this.categoryService.findOne(identifier);
   }
 
   @Get()
@@ -84,7 +85,7 @@ export class CategoryController {
     description: 'Not Found.',
   })
   patch(
-    @Param() { id }: FindOneParams,
+    @Param() { id }: IdParam,
     @Body() data: PatchCategoryDto,
   ): Promise<Category> {
     return this.categoryService.patch(id, data);
@@ -104,7 +105,7 @@ export class CategoryController {
     status: HttpStatus.NOT_FOUND,
     description: 'Not Found.',
   })
-  delete(@Param() { id }: FindOneParams): Promise<void> {
+  delete(@Param() { id }: IdParam): Promise<void> {
     return this.categoryService.delete(id);
   }
 }

@@ -101,8 +101,14 @@ export class CategoryService {
     return new this.categoryModel(categoryDto).save();
   }
 
-  async findOneById(id: string): Promise<CategoryDocument> {
-    const category = await this.categoryModel.findOne({ _id: id }).exec();
+  async findOne(identifier: string): Promise<CategoryDocument> {
+    const category = await this.categoryModel
+      .findOne(
+        identifier.match(/^[0-9a-fA-F]{24}$/)
+          ? { _id: identifier }
+          : { slug: identifier },
+      )
+      .exec();
     if (!category) {
       throw new NotFoundException({
         statusCode: HttpStatus.NOT_FOUND,

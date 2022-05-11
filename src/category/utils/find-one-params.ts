@@ -1,13 +1,12 @@
-import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class FindOneParams {
   @IsString()
   @IsNotEmpty()
-  @IsMongoId()
   @ApiProperty({
     required: true,
-    description: 'Id of category',
+    description: 'Unique category identifier. Slug or Id',
   })
-  readonly id: string;
+  readonly identifier: string;
 }
