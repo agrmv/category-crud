@@ -30,14 +30,15 @@ export class CategoryService {
     page?: number;
     sort?: string;
   }): FilterQuery<CategoryDocument> {
-    const filter = [];
+    const filter = { $and: [] };
 
+    console.log(filter);
     if (params.slug) {
-      filter.push({ slug: params.slug });
+      filter['$and'].push({ slug: params.slug });
     }
 
     if (!params.search && params.name) {
-      filter.push({
+      filter['$and'].push({
         $or: [
           { name: params.name },
           { name: { $regex: `.*${params.name}.*`, $options: 'i' } },
@@ -46,25 +47,18 @@ export class CategoryService {
     }
 
     if (!params.search && params.description) {
-      filter.push({
-        $and: [
+      filter['$and'].push({
+        $or: [
+          { description: params.description },
           {
-            $or: [
-              { description: params.description },
-              {
-                description: {
-                  $regex: `.*${params.description}.*`,
-                  $options: 'i',
-                },
-              },
-            ],
+            description: { $regex: `.*${params.description}.*`, $options: 'i' },
           },
         ],
       });
     }
 
     if (params.search) {
-      filter.push({
+      filter['$and'].push({
         $or: [
           {
             $or: [
@@ -88,10 +82,10 @@ export class CategoryService {
     }
 
     if (params.hasOwnProperty('active')) {
-      filter.push({ active: params.active });
+      filter['$and'].push({ active: params.active });
     }
 
-    return Object.assign({}, ...filter);
+    return filter;
   }
 
   constructor(
