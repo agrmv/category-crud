@@ -32,7 +32,6 @@ export class CategoryService {
   }): FilterQuery<CategoryDocument> {
     const filter = { $and: [] };
 
-    console.log(filter);
     if (params.slug) {
       filter['$and'].push({ slug: params.slug });
     }
