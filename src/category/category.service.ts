@@ -47,10 +47,17 @@ export class CategoryService {
 
     if (!params.search && params.description) {
       filter.push({
-        $or: [
-          { description: params.description },
+        $and: [
           {
-            description: { $regex: `.*${params.description}.*`, $options: 'i' },
+            $or: [
+              { description: params.description },
+              {
+                description: {
+                  $regex: `.*${params.description}.*`,
+                  $options: 'i',
+                },
+              },
+            ],
           },
         ],
       });
