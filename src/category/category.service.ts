@@ -29,7 +29,7 @@ export class CategoryService {
     page?: number;
     sort?: string;
   }): FilterQuery<CategoryDocument> {
-    const filter = { $and: [] };
+    const filter = Object.keys(params).length ? { $and: [] } : {};
 
     if (!params.search && params.name) {
       filter['$and'].push({
