@@ -21,7 +21,6 @@ export class CategoryService {
   }
 
   private static getFilterProperties(params: {
-    slug?: string;
     name?: string;
     description?: string;
     search?: string;
@@ -30,11 +29,7 @@ export class CategoryService {
     page?: number;
     sort?: string;
   }): FilterQuery<CategoryDocument> {
-    const filter = { $and: [] };
-
-    if (params.slug) {
-      filter['$and'].push({ slug: params.slug });
-    }
+    const filter = Object.keys(params).length ? { $and: [] } : {};
 
     if (!params.search && params.name) {
       filter['$and'].push({
@@ -101,8 +96,14 @@ export class CategoryService {
     return new this.categoryModel(categoryDto).save();
   }
 
-  async findOneById(id: string): Promise<CategoryDocument> {
-    const category = await this.categoryModel.findOne({ _id: id }).exec();
+  async findOne(identifier: string): Promise<CategoryDocument> {
+    const category = await this.categoryModel
+      .findOne(
+        identifier.match(/^[0-9a-fA-F]{24}$/)
+          ? { _id: identifier }
+          : { slug: identifier },
+      )
+      .exec();
     if (!category) {
       throw new NotFoundException({
         statusCode: HttpStatus.NOT_FOUND,
@@ -113,7 +114,6 @@ export class CategoryService {
   }
 
   async getAll(params: {
-    slug?: string;
     name?: string;
     description?: string;
     active?: boolean;

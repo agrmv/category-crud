@@ -14,16 +14,6 @@ export class QueryParams {
   @IsOptional()
   @Transform(({ value }) => value?.trim())
   @ApiProperty({
-    description: 'Filter categories by slug',
-    example: 'Books',
-    required: false,
-  })
-  readonly slug?: string;
-
-  @IsString()
-  @IsOptional()
-  @Transform(({ value }) => value?.trim())
-  @ApiProperty({
     description: 'Filter categories by name',
     example: 'Scientific literature',
     required: false,
